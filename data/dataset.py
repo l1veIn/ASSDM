@@ -60,15 +60,20 @@ class UCMdata(data.Dataset):
             else:
                 self.imgs.append(fi_d)
 
-    def __init__(self, root, transforms=transform, train=True, test=False ,start = 0., end =100.):
+    def __init__(self, root, transforms=transform, train=True, test=False ,start = 0., end =100.,example=False):
         self.train = train
         self.test = test
         self.imgs = []
-        self.getFiles(root)
-        self.imgs = sorted(self.imgs,
-                           key=lambda x: x.split('.')[-2].split('/')[-1][-2:])
-        imgs_num = len(self.imgs)    
-        self.imgs = self.imgs[int(start * 0.01 * imgs_num):int(end * 0.01 * imgs_num)]
+        if example:
+            #123
+            self.imgs.append(root)
+        else:
+            self.getFiles(root) 
+            self.imgs = sorted(self.imgs,
+                               key=lambda x: x.split('.')[-2].split('/')[-1][-2:])
+        imgs_num = len(self.imgs)   
+        if not example:
+            self.imgs = self.imgs[int(start * 0.01 * imgs_num):int(end * 0.01 * imgs_num)]
                   
         self.transforms = transforms
 
@@ -77,6 +82,7 @@ class UCMdata(data.Dataset):
 #         label = t.zeros(21)
 #         label[self.dictionary[img_path.split('/')[-2]]] = 1.0
         label = self.dictionary[img_path.split('/')[-2]]
+#         print(label)
         data = Image.open(img_path)
         if self.transforms:
             data = self.transforms(data)
