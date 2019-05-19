@@ -61,6 +61,7 @@ class UCMdata(data.Dataset):
                 self.imgs.append(fi_d)
 
     def __init__(self, root, transforms=transform, train=True, test=False ,start = 0., end =100.,example=False):
+        self.example=example
         self.train = train
         self.test = test
         self.imgs = []
@@ -81,7 +82,11 @@ class UCMdata(data.Dataset):
         img_path = self.imgs[index]
 #         label = t.zeros(21)
 #         label[self.dictionary[img_path.split('/')[-2]]] = 1.0
-        label = self.dictionary[img_path.split('/')[-2]]
+        print(img_path)
+        if self.example:
+            label = 'example'
+        else:
+            label = self.dictionary[img_path.split('/')[-2]]
 #         print(label)
         data = Image.open(img_path)
         if self.transforms:
